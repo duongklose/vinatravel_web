@@ -1,0 +1,67 @@
+
+ul {
+    margin: 0 !important;
+}
+ul li {
+    list-style-type: none;
+}
+a {
+    text-decoration: none;
+}
+a:hover {
+    text-decoration: none;
+}
+.header {
+    padding-top: 5px;
+    padding-bottom: 5px;
+    position: fixed;
+    top: 0;
+    background-color: #F1F0F0;
+    width: 100%;
+    z-index: 1000;
+}
+.header__logo {
+    height: 50px;
+    cursor: pointer;
+}
+.header__menu {
+    font-size: 16px;
+}
+.header__menu li{
+    display: inline-block;
+}
+.header .header__menu li a {
+    color: #061834;
+    padding: 0 8px;
+    font-weight: bold;
+}
+.header .header__menu li a:hover {
+    color: #030080;
+    padding: 0 8px;
+    font-weight: bold;
+    text-decoration: none;
+}
+
+.display-inline-block{
+    display: inline-block;
+}
+
+.appname{
+    color: #030080; 
+    font-size: 20px; 
+    margin: 0px;
+    font-weight: bold;
+}
+
+.content{
+    margin-top: 100px;
+}
+
+.input-field{
+    width: 300px !important;
+    height: 40px !important;
+}
+
+.paddingR-10{
+    padding-right: 10px;
+}
