@@ -17,7 +17,7 @@
         <div class="row">
             <div class="col-md-4"></div>
             <div class="col-md-4">
-                <form action="verify_login" method="post">
+                <form action="login/verify_login" method="post">
                     <table>
                         <tr>
                             <td>Số điện thoại</td>

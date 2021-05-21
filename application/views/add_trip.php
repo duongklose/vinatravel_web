@@ -1,3 +1,6 @@
+<?php
+
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -18,15 +21,15 @@
 				<div class="col-1 col-md-8 align-self-center">
                     <nav>
                         <ul class="nav justify-content-center header__menu">
-                            <li class="nav-item dropdown">
+                            <!-- <li class="nav-item dropdown">
                                 <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">Quản lý chuyến đi</a>
                                 <div class="dropdown-menu">
                                     <a class="dropdown-item" style="color:#000; font-weight:normal;" href="add_trip">Thêm chuyến đi</a>
                                     <a class="dropdown-item" style="color:#000; font-weight:normal;" href="update_trip">Cập nhật chuyến đi</a>
                                 </div>
-                            </li>
+                            </li> -->
                             <li class="nav-item">
-                                <a class="nav-link active" href="#">Quản lý chuyến đi</a>
+                                <a class="nav-link active" href="../home">Quản lý chuyến đi</a>
                             </li>
                             <li class="nav-item">
                                 <a class="nav-link" href="#">Quản lý xe</a>
@@ -52,7 +55,9 @@
             <h2>Thêm chuyến đi</h2>
         </div>
         <div class="row">
-            <div class="col-md-3"></div>
+            <div class="col-md-3">
+                <?php echo $this->session->flashdata('msg');?>
+            </div>
             <div class="col-md-6">
                 <form action="addTrip" method="post">
                     <table>
@@ -62,9 +67,9 @@
                                 <div class="input-group">
                                     <select class="custom-select input-field" id="inputGroupSelect02" name="coach">
                                         <option selected>Chọn xe...</option>
-                                        <option value="1">Xe 1</option>
-                                        <option value="2">Xe 2</option>
-                                        <option value="3">Xe 3</option>
+                                        <?php foreach($coaches as $row):?>
+                                        <option value="<?php echo $row->id;?>"><?php echo $row->license_plate;?></option>
+                                        <?php endforeach;?>
                                     </select>
                                 </div>
                             </td>
@@ -73,12 +78,13 @@
                             <td class="paddingR-10"><span style="font-weight: bold;">Địa điểm xuất phát:</span></td>
                             <td>
                                 <div class="input-group">
-                                    <select class="custom-select input-field" id="inputGroupSelect02" name="startLocation">
-                                        <option selected>Chọn địa điểm xuất phát...</option>
-                                        <option value="1">Hà Nội</option>
-                                        <option value="2">TP.Hồ Chí Minh</option>
-                                        <option value="3">Đà Nẵng</option>
+                                    <select class="form-control custom-select input-field" name="startLocation" id="startLocation" required>
+                                        <option value="">Chọn địa điểm xuất phát...</option>
+                                        <?php foreach($provinces as $row):?>
+                                        <option value="<?php echo $row->id;?>"><?php echo $row->name;?></option>
+                                        <?php endforeach;?>
                                     </select>
+
                                 </div>
                             </td>
                         </tr>
@@ -88,9 +94,9 @@
                                 <div class="input-group">
                                     <select class="custom-select input-field" id="inputGroupSelect02" name="endLocation">
                                         <option selected>Chọn địa điểm kết thúc...</option>
-                                        <option value="1">Hà Nội</option>
-                                        <option value="2">TP.Hồ Chí Minh</option>
-                                        <option value="3">Đà Nẵng</option>
+                                        <?php foreach($provinces as $row):?>
+                                        <option value="<?php echo $row->id;?>"><?php echo $row->name;?></option>
+                                        <?php endforeach;?>
                                     </select>
                                 </div>
                             </td>
@@ -105,7 +111,7 @@
                             <td class="paddingR-10"><span style="font-weight: bold;">Thời gian di chuyển(h):</span></td>
                             <td>
                                 <div class="input-group">
-                                    <input type="text" class="form-control" name="timeToGo" placeholder="VD: 42h30, 3h00, 15h25">
+                                    <input type="text" class="form-control" name="timeToGo" placeholder="VD: 4.5, 3,...">
                                 </div>
                             </td>
                         </tr>

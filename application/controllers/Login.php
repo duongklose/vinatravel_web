@@ -6,8 +6,10 @@ class Login extends CI_Controller{
         parent :: __construct();
     }
 
-    public function verify_login(){
+    function index(){
         $this->load->view('login');
+    }
+    public function verify_login(){
         $phone = $this->input->post('phone');
         $password = $this->input->post('pass');
 
@@ -17,10 +19,10 @@ class Login extends CI_Controller{
             //tạo session cho người dùng
             $this->session->set_userdata('loginSuccess', $phone);
             //chuyển hướng
-            redirect('home/add_trip','refresh');
+            redirect('home','refresh');
 
         }else{
-            // echo 'Đăng nhập thất bại.';
+            redirect('login','refresh');
         }
     }
 }
