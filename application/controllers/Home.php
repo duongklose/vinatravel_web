@@ -31,6 +31,7 @@
                 $phone = $this->session->userdata('loginSuccess');
                 $id_transportation = $this->TransportationModel->getIdTransportationByPhone($phone);
                 $data['coaches'] = $this->CoachModel->get_all_coach($id_transportation);
+                // print_r($data['coaches']);
                 $data['provinces'] = $this->ProvinceModel->get_all_provinces()->result();
                 $this->load->view('add_trip', $data);
             }else{
@@ -81,6 +82,74 @@
                 // echo "<script type='text/javascript'>alert('$message');</script>";
                 $this->session->set_flashdata('msg','<div class="alert alert-success">Thêm thành công.</div>');
                 redirect('home/add_trip','refresh');
+
+            }else{
+                redirect('login/verify_login','refresh');
+            }
+        }
+
+        public function manage_coach(){
+            if($this->session->userdata('loginSuccess')){
+
+                $phone = $this->session->userdata('loginSuccess');
+                $id_transportation = $this->TransportationModel->getIdTransportationByPhone($phone);
+                $data['coaches'] = $this->CoachModel->get_all_coach($id_transportation);
+                $this->load->view('manage_coach', $data);
+            }else{
+                redirect('login/verify_login','refresh');
+            }
+        }
+
+        public function delete_coach()
+        {
+            if($this->session->userdata('loginSuccess')){
+
+                $id_coach = $this->uri->segment(3);
+                $this->CoachModel->delete_coach($id_coach);
+                $this->session->set_flashdata('msg','<div class="alert alert-success">Đã xóa</div>');
+                redirect('home/manage_coach');
+            }else{
+                redirect('login/verify_login','refresh');
+            }
+        }
+        public function add_coach()
+        {
+            if($this->session->userdata('loginSuccess')){
+
+                $phone = $this->session->userdata('loginSuccess');
+                $data['type'] = $this->CoachModel->get_all_type_coach();
+                $this->load->view('add_coach', $data);
+            }else{
+                redirect('login/verify_login','refresh');
+            }
+        }
+
+        public function addCoach()
+        {
+            $phone = $this->session->userdata('loginSuccess');
+            if($phone){
+
+                //xác định id Nhà xe đang thêm dữ liệu
+                $idTransportation = $this->TransportationModel->getIdTransportationByPhone($phone);
+
+                //thêm dữ liệu xe vào database
+                $type = $this->input->post('type');
+                $numOfSeats = $this->input->post('numOfSeats');
+                $licensePlate = $this->input->post('licensePlate');
+                $description = $this->input->post('description');
+
+                //kiểm tra trùng xe đã thêm
+                if( $this->CoachModel->checkCoachExist($licensePlate) > 0){
+                    //Thông báo thêm thất bại
+                    $this->session->set_flashdata('msg','<div class="alert alert-danger">Xe đã tồn tại.</div>');
+                }else{
+                    //gửi dữ liệu sang model
+                    $this->CoachModel->addCoach($idTransportation, $numOfSeats, $licensePlate, $description, $type);
+
+                    //Thông báo thêm thành công
+                    $this->session->set_flashdata('msg','<div class="alert alert-success">Thêm thành công.</div>');
+                }
+                redirect('home/add_coach','refresh');
 
             }else{
                 redirect('login/verify_login','refresh');

@@ -20,7 +20,6 @@ class Login extends CI_Controller{
             $this->session->set_userdata('loginSuccess', $phone);
             //chuyển hướng
             redirect('home','refresh');
-
         }else{
             redirect('login','refresh');
         }
