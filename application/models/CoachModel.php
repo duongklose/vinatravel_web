@@ -50,6 +50,18 @@
             $this->db->where('license_plate', $licensePlate);
             return $this->db->get('coaches')->num_rows();
         }
+
+        function get_id_coach($licensePlate){
+            $this->db->select('id');
+            $this->db->where('license_plate', $licensePlate);
+            return $this->db->get('coaches')->result();
+        }
+        function add_coach_seat($id_coach, $numOfSeats){
+            for ($i=1; $i <= $numOfSeats; $i++) { 
+                $sql = "INSERT INTO coach_seat (`id_coach`, `id_seat`) VALUES (".$id_coach.",".$i.")";
+                $this->db->query($sql);
+            }
+        }
     }
     
     

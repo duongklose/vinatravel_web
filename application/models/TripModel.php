@@ -106,6 +106,33 @@ class TripModel extends CI_Model {
         $query = $this->db->query($sql)->result();
         return $query;
     }
+
+    function get_statistics($year, $idTransportation){
+        $sql = "SELECT t1.id_transportation, t1.m, t1.y, num, p
+                FROM (SELECT id_transportation, SUM(price) as p, MONTH(departure_time) as m, YEAR(departure_time) as y
+                        FROM (SELECT id_transportation, departure_time, price FROM trips, tickets WHERE trips.id=tickets.id_trip) as t
+                        GROUP BY(MONTH(departure_time))) as t1,
+                 
+                        (SELECT COUNT(*) as num, MONTH(departure_time) as m, YEAR(departure_time) as y
+                        FROM trips
+                        GROUP BY(MONTH(departure_time))) as t2
+                WHERE t1.m=t2.m AND t1.y=t2.y AND t1.y =".$year." AND t1.id_transportation = " .$idTransportation;
+        $query = $this->db->query($sql)->result();
+        return $query;
+    }
+    function get_statistics_by_year($idTransportation){
+        $sql = "SELECT t1.id_transportation, t1.y, num, p
+                FROM (SELECT id_transportation, SUM(price) as p, YEAR(departure_time) as y
+                        FROM (SELECT id_transportation, departure_time, price FROM trips, tickets WHERE trips.id=tickets.id_trip) as t
+                        GROUP BY(YEAR(departure_time))) as t1,
+                 
+                        (SELECT COUNT(*) as num, YEAR(departure_time) as y
+                        FROM trips
+                        GROUP BY(YEAR(departure_time))) as t2
+                WHERE t1.y=t2.y AND t1.id_transportation = " .$idTransportation;
+        $query = $this->db->query($sql)->result();
+        return $query;
+    }
 }
 
 ?>

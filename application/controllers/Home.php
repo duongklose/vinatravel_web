@@ -147,7 +147,8 @@
                 }else{
                     //gửi dữ liệu sang model
                     $this->CoachModel->addCoach($idTransportation, $numOfSeats, $licensePlate, $description, $type);
-
+                    $id_coach = $this->CoachModel->get_id_coach($licensePlate)[0]->id;
+                    $this->CoachModel->add_coach_seat($id_coach, $numOfSeats);
                     //Thông báo thêm thành công
                     $this->session->set_flashdata('msg','<div class="alert alert-success">Thêm thành công.</div>');
                 }
@@ -173,7 +174,7 @@
         public function add_ticket()
         {
             if($this->session->userdata('loginSuccess')){
-                $phone = $this->session->userdata('loginSuccess');
+                // $phone = $this->session->userdata('loginSuccess');
                 $id_trip = $this->uri->segment(3);
                 //tiền xử lý dữ liệu
                 $startProvinceID = $this->TripModel->get_province($id_trip)->result()[0]->departure_location;
@@ -229,11 +230,43 @@
                 for ($i=0; $i < sizeof($seat); $i++) { 
                     $this->TicketModel->add_seat_ticket_trip($id_trip, $seat[$i], $id_ticket);
                 }
-                // print_r(sizeof($seat));
                 $this->session->set_flashdata('msg','<div class="alert alert-success">Thêm thành công.</div>');
                 $url = 'home/add_ticket/' .$id_trip;
                 redirect($url,'refresh');
 
+            }else{
+                redirect('login/verify_login','refresh');
+            }
+        }
+
+        public function statistics()
+        {
+            if($this->session->userdata('loginSuccess')){
+                $phone = $this->session->userdata('loginSuccess');
+                $idTransportation = $this->TransportationModel->getIdTransportationByPhone($phone);
+                $year = getdate()['year'];
+                $data['d'] = $this->TripModel->get_statistics($year, $idTransportation);
+                $data['type'] = 'month';
+                $this->load->view('statistics', $data);
+            }else{
+                redirect('login/verify_login','refresh');
+            }
+        }
+        function filterStatistics(){
+            $phone = $this->session->userdata('loginSuccess');
+            if($phone){
+
+                $idTransportation = $this->TransportationModel->getIdTransportationByPhone($phone);
+                //nhận dữ liệu từ view
+                $data['type'] = $this->input->post('filter');
+                if($data['type'] == 'year'){
+                    $data['d'] = $this->TripModel->get_statistics_by_year($idTransportation);
+                }
+                else{
+                    $year = getdate()['year'];
+                    $data['d'] = $this->TripModel->get_statistics($year, $idTransportation);
+                }
+                $this->load->view('statistics', $data);
             }else{
                 redirect('login/verify_login','refresh');
             }

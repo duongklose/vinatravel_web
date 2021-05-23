@@ -32,10 +32,7 @@
                                 <a class="nav-link" href="../home/manage_coach">Quản lý xe</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link" href="#">Quản lý vé</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link" href="#">Thống kê</a>
+                                <a class="nav-link" href="/vinatravel/home/statistics">Thống kê</a>
                             </li>
                         </ul>
                     </nav>
