@@ -17,18 +17,11 @@
 				<div class="col-1 col-md-8 align-self-center">
                     <nav>
                         <ul class="nav justify-content-center header__menu">
-                            <!-- <li class="nav-item dropdown">
-                                <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">Quản lý chuyến đi</a>
-                                <div class="dropdown-menu">
-                                    <a class="dropdown-item" style="color:#000; font-weight:normal;" href="home/add_trip">Thêm chuyến đi</a>
-                                    <a class="dropdown-item" style="color:#000; font-weight:normal;" href="home">Cập nhật chuyến đi</a>
-                                </div>
-                            </li> -->
                             <li class="nav-item">
-                                <a class="nav-link active" href="#">Quản lý chuyến đi</a>
+                                <a class="nav-link active" href="/vinatravel/home">Quản lý chuyến đi</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link" href="./home/manage_coach">Quản lý xe</a>
+                                <a class="nav-link" href="../manage_coach">Quản lý xe</a>
                             </li>
                             <li class="nav-item">
                                 <a class="nav-link" href="#">Quản lý vé</a>
@@ -40,7 +33,7 @@
                     </nav>
 				</div>
 				<div class="col-3 col-md-2 align-self-center">
-                    <a href="./home/logout">Đăng xuất</a>
+                    <a href="home/logout">Đăng xuất</a>
 				</div>
 			</div>
 		</div>
@@ -49,39 +42,33 @@
         <div class="container my-md-5">
             <div class="row justify-content-md-center">
                 <div class="col col-lg-12">
-                    <h3>Danh sách chuyến đi</h3>
+                    <h3>Thông tin vé đã đặt</h3>
                     <?php echo $this->session->flashdata('msg');?>
-                    <a href="<?php echo site_url('home/add_trip');?>" class="btn btn-success btn-sm">Thêm chuyến đi</a><hr/>
+                    <a href="<?php echo site_url('home/add_ticket/') .$tripId;?>" class="btn btn-success btn-sm">Thêm vé thủ công</a><hr/>
                     <table class="table table-striped" id="mytable" style="font-size: 14px;">
                         <thead>
                             <tr>
                                 <th>STT</th>
-                                <th>Xe</th>
-                                <th>Điểm đi</th>
-                                <th>Điểm đến</th>
-                                <th>Thời gian đi</th>
-                                <th>Thời gian đến</th>
-                                <th>Giá vé</th>
+                                <th>Ghế ngồi</th>
+                                <th>Số điện thoại khách</th>
+                                <th>Điểm đón</th>
+                                <th>Điểm xuống</th>
+                                <th>Hình thức thanh toán</th>
                             </tr>
                         </thead>
                         <tbody>
                             <?php
                                 $no = 0;
-                                foreach ($trips as $row):
+                                foreach ($tripInfo as $row):
                                     $no++;
                             ?>
                             <tr>
                                 <td><?php echo $no;?></td>
-                                <td><?php echo $row->license_plate;?></td>
-                                <td><?php echo $row->departure_location;?></td>
-                                <td><?php echo $row->arrival_location;?></td>
-                                <td><?php echo $row->departure_time;?></td>
-                                <td><?php echo $row->arrival_time;?></td>
-                                <td><?php echo $row->price;?></td>
-                                <td>
-                                    <a href="<?php echo './home/info_trip/'.$row->id_trip?>" class="btn btn-sm btn-info">Xem</a>
-                                    <a href="<?php echo './home/delete_trip/'.$row->id_trip?>" class="btn btn-sm btn-danger">Xóa</a>
-                                </td>
+                                <td><?php echo $row->seat_name;?></td>
+                                <td><?php echo $row->phone;?></td>
+                                <td><?php echo $row->startLocation;?></td>
+                                <td><?php echo $row->endLocation;?></td>
+                                <td><?php echo $row->payment_method;?></td>
                             </tr>
                             <?php endforeach;?>
                         </tbody>
@@ -95,10 +82,10 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="/vinatravel/application/assets/datatables.js"></script>
-    <script type="text/javascript">
+    <!-- <script type="text/javascript">
         $(document).ready(function(){
             $('#mytable').DataTable();
         });
-    </script>
+    </script> -->
 </body>
 </html>

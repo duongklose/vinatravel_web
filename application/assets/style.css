@@ -65,3 +65,8 @@ a:hover {
 .paddingR-10{
     padding-right: 10px;
 }
+
+.marginBT-20{
+    margin-top: 10px;
+    margin-bottom: 10px;
+}

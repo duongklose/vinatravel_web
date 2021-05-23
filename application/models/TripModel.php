@@ -20,12 +20,6 @@ class TripModel extends CI_Model {
         On filted_trip.departure_location=p1.id LEFT JOIN provinces AS p2
         ON filted_trip.arrival_location=p2.id";
 
-        // $sql = "Select trips.id as id_trip, license_plate, p1.name as departure_location, p2.name as arrival_location, departure_time, arrival_time, price
-        //         From trips
-        //         Left join coaches
-        //         On trips.id_coach=coaches.id LEFT JOIN provinces as p1
-        //         On trips.departure_location=p1.id LEFT JOIN provinces AS p2
-        //         ON trips.arrival_location=p2.id";
         // $this->db->select('license_plate,departure_location,arrival_location,departure_time,arrival_time,price');
         // $this->db->from('trips');
         // $this->db->join('coaches','id_coach = id','left');
@@ -33,9 +27,84 @@ class TripModel extends CI_Model {
         return $query;
     }
 
-    public function delete_trip($id_trip)
+    function delete_trip($id_trip)
     {
         $this->db->delete('trips', array('id' => $id_trip));
+    }
+
+    function get_province($id_trip)
+    {
+        $this->db->select('departure_location,arrival_location');
+        $this->db->where('id', $id_trip);
+        return $this->db->get('trips');
+    }
+    function get_emptyseatA($id_trip){
+        //get id coach
+        $this->db->select('id_coach');
+        $this->db->where('id', $id_trip);
+        $coachId = $this->db->get('trips')->result()[0]->id_coach;
+
+        $sql = "SELECT * FROM (Select id_seat, name 
+                                from (Select * from coach_seat where id_coach =".$coachId. " AND (id_seat BETWEEN 1 AND 10)) as cs
+                                left join seats
+                                on cs.id_seat = seats.id) as s1
+                WHERE name NOT IN (Select name 
+                                from (SELECT id_seat FROM `seat_ticket_trip` WHERE id_trip=".$id_trip.") as stt
+                                left join seats
+                                on stt.id_seat = seats.id)";
+        $query = $this->db->query($sql)->result();
+        return $query;
+    }
+    function get_emptyseatB($id_trip){
+        //get id coach
+        $this->db->select('id_coach');
+        $this->db->where('id', $id_trip);
+        $coachId = $this->db->get('trips')->result()[0]->id_coach;
+
+        $sql = "SELECT * FROM (Select id_seat, name 
+                                from (Select * from coach_seat where id_coach =".$coachId. " AND (id_seat BETWEEN 11 AND 20)) as cs
+                                left join seats
+                                on cs.id_seat = seats.id) as s1
+                WHERE name NOT IN (Select name 
+                                from (SELECT id_seat FROM `seat_ticket_trip` WHERE id_trip=".$id_trip.") as stt
+                                left join seats
+                                on stt.id_seat = seats.id)";
+        $query = $this->db->query($sql)->result();
+        return $query;
+    }
+    function get_emptyseatC($id_trip){
+        //get id coach
+        $this->db->select('id_coach');
+        $this->db->where('id', $id_trip);
+        $coachId = $this->db->get('trips')->result()[0]->id_coach;
+
+        $sql = "SELECT * FROM (Select id_seat, name 
+                                from (Select * from coach_seat where id_coach =".$coachId. " AND (id_seat BETWEEN 21 AND 30)) as cs
+                                left join seats
+                                on cs.id_seat = seats.id) as s1
+                WHERE name NOT IN (Select name 
+                                from (SELECT id_seat FROM `seat_ticket_trip` WHERE id_trip=".$id_trip.") as stt
+                                left join seats
+                                on stt.id_seat = seats.id)";
+        $query = $this->db->query($sql)->result();
+        return $query;
+    }
+    function get_emptyseatD($id_trip){
+        //get id coach
+        $this->db->select('id_coach');
+        $this->db->where('id', $id_trip);
+        $coachId = $this->db->get('trips')->result()[0]->id_coach;
+
+        $sql = "SELECT * FROM (Select id_seat, name 
+                                from (Select * from coach_seat where id_coach =".$coachId. " AND (id_seat BETWEEN 31 AND 40)) as cs
+                                left join seats
+                                on cs.id_seat = seats.id) as s1
+                WHERE name NOT IN (Select name 
+                                from (SELECT id_seat FROM `seat_ticket_trip` WHERE id_trip=".$id_trip.") as stt
+                                left join seats
+                                on stt.id_seat = seats.id)";
+        $query = $this->db->query($sql)->result();
+        return $query;
     }
 }
 

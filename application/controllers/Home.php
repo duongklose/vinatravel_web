@@ -12,6 +12,8 @@
             $this->load->model('TransportationModel');
             $this->load->model('CoachModel');
             $this->load->model('ProvinceModel');
+            $this->load->model('TicketModel');
+            $this->load->model('UserModel');
         }
         
         function index(){
@@ -63,7 +65,7 @@
                 //xác định id Nhà xe đang thêm dữ liệu
                 $idTransportation = $this->TransportationModel->getIdTransportationByPhone($phone);
 
-                //thêm dữ liệu chuyến đi vào database
+                //nhận dữ liệu từ view
                 $coach = $this->input->post('coach');
                 $startLocation = $this->input->post('startLocation');
                 $endLocation = $this->input->post('endLocation');
@@ -132,7 +134,7 @@
                 //xác định id Nhà xe đang thêm dữ liệu
                 $idTransportation = $this->TransportationModel->getIdTransportationByPhone($phone);
 
-                //thêm dữ liệu xe vào database
+                //nhận dữ liệu từ view
                 $type = $this->input->post('type');
                 $numOfSeats = $this->input->post('numOfSeats');
                 $licensePlate = $this->input->post('licensePlate');
@@ -150,6 +152,87 @@
                     $this->session->set_flashdata('msg','<div class="alert alert-success">Thêm thành công.</div>');
                 }
                 redirect('home/add_coach','refresh');
+
+            }else{
+                redirect('login/verify_login','refresh');
+            }
+        }
+
+        public function info_trip()
+        {
+            if($this->session->userdata('loginSuccess')){
+                $id_trip = $this->uri->segment(3);
+                $data['tripInfo']= $this->TicketModel->get_info($id_trip);
+                $data['tripId'] = $id_trip;
+                $this->load->view('info_trip', $data);
+            }else{
+                redirect('login/verify_login','refresh');
+            }
+        }
+
+        public function add_ticket()
+        {
+            if($this->session->userdata('loginSuccess')){
+                $phone = $this->session->userdata('loginSuccess');
+                $id_trip = $this->uri->segment(3);
+                //tiền xử lý dữ liệu
+                $startProvinceID = $this->TripModel->get_province($id_trip)->result()[0]->departure_location;
+                $endProvinceID = $this->TripModel->get_province($id_trip)->result()[0]->arrival_location;
+
+                $data['tripId'] = $id_trip;
+                $data['startLocation'] = $this->ProvinceModel->get_all_location($startProvinceID)->result();
+                $data['endLocation'] = $this->ProvinceModel->get_all_location($endProvinceID)->result();
+                $data['emptyseatA'] = $this->TripModel->get_emptyseatA($id_trip);
+                $data['emptyseatB'] = $this->TripModel->get_emptyseatB($id_trip);
+                $data['emptyseatC'] = $this->TripModel->get_emptyseatC($id_trip);
+                $data['emptyseatD'] = $this->TripModel->get_emptyseatD($id_trip);
+
+                $this->load->view('add_ticket', $data);
+            }else{
+                redirect('login/verify_login','refresh');
+            }
+        }
+
+        public function addTicket()
+        {
+            $tphone = $this->session->userdata('loginSuccess');
+            if($tphone){
+
+                //xác định id Nhà xe đang thêm dữ liệu
+                // $idTransportation = $this->TransportationModel->getIdTransportationByPhone($tphone);
+
+                //nhận dữ liệu từ view
+                $id_trip = $this->uri->segment(3);
+                $phone = $this->input->post('phone');
+                $seat = $this->input->post('chosenSeat');
+                $startLocation = $this->input->post('startLocation');
+                $endLocation = $this->input->post('endLocation');
+                $price = $this->input->post('price');
+
+                //kiểm tra sđt của khách với db, trùng thì get id, không trùng thì tạo mới user.
+                $id_user_get = $this->UserModel->get_id_user_by_phone($phone);
+                if($id_user_get == NULL){
+                    //tạo mới user và trả về id user mới tạo
+                    $this->UserModel->add_new_user($phone);
+                    $id_user = $this->UserModel->get_id_user_by_phone($phone)[0]->id;
+                }
+                else{
+                    $id_user = $id_user_get[0]->id;
+                }
+                
+                //==> nhập bảng tickets.
+                $this->TicketModel->add_ticket($id_trip, $id_user, $startLocation, $endLocation);
+
+                //lấy id ticket vừa thêm
+                $id_ticket = $this->TicketModel->get_id_newest_ticket($id_trip, $id_user)[0]->id;
+                //==> nhập bảng seat_ticket_trip
+                for ($i=0; $i < sizeof($seat); $i++) { 
+                    $this->TicketModel->add_seat_ticket_trip($id_trip, $seat[$i], $id_ticket);
+                }
+                // print_r(sizeof($seat));
+                $this->session->set_flashdata('msg','<div class="alert alert-success">Thêm thành công.</div>');
+                $url = 'home/add_ticket/' .$id_trip;
+                redirect($url,'refresh');
 
             }else{
                 redirect('login/verify_login','refresh');

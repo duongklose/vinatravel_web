@@ -13,6 +13,9 @@
             $query = $this->db->get('provinces');
             return $query;  
         }
-    
+        function get_all_location($provinceID){
+            $this->db->where('id_province', $provinceID);
+            return $this->db->get('locations');
+        }
     }
 ?>
